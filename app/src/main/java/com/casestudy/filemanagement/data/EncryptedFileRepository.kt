@@ -25,7 +25,7 @@ import java.util.Locale
 class EncryptedFileRepository(private val context: Context,
                               private val fileEncryptor: FileEncryptor)
 {
-    companion object {
+    private companion object {
         private const val TAG = "EncryptedFileRepository"
     }
     /**

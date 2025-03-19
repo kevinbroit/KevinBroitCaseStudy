@@ -21,19 +21,15 @@ import kotlinx.coroutines.launch
  * The FileManagementViewModel is responsible for managing medical files and user consents.
  *
  * @param application The application context used for system services.
- * @param consentService for handling user consents.
- * @param fileManager to manage file encryption and local storage.
- * @param fileRepository to handle file data persistence and retrieval.
+ * @param consentDao for handling user consents.
+ * @param encryptedFileRepository to manage file encryption and local storage.
+ * @param fakeFileDao to handle file data persistence and retrieval.
  */
 class FileManagementViewModel(application: Application,
-                              private val consentService: ConsentDao,
-                              private val fileManager: EncryptedFileRepository,
-                              val fileRepository: FakeFileDao
+                              private val consentDao: ConsentDao,
+                              private val encryptedFileRepository: EncryptedFileRepository,
+                              val fakeFileDao: FakeFileDao
 ) : AndroidViewModel(application) {
-    companion object {
-        private const val TAG = "FileManagementViewModel"
-    }
-
     /**
      * Application context used for operations that require a global context.
      */
@@ -75,8 +71,8 @@ class FileManagementViewModel(application: Application,
     fun uploadFile(uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val appFile = fileManager.store(uri)
-                fileRepository.addFile(appFile)
+                val appFile = encryptedFileRepository.store(uri)
+                fakeFileDao.addFile(appFile)
 
                 _uiState.update { it -> it.copy(files = it.files + appFile) }
 
@@ -96,7 +92,7 @@ class FileManagementViewModel(application: Application,
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
             try {
-                val content = consentService.get()
+                val content = consentDao.get()
                 _uiState.update { it.copy(consentContent = content, isLoading = false) }
             } catch (e: Exception) {
                 Log.e("readConsent", "Error reading consent: ${e.message}", e)
@@ -113,7 +109,7 @@ class FileManagementViewModel(application: Application,
         viewModelScope.launch {
             _uiState.update { oldValue -> oldValue.copy(isLoading = true, error = null) }
             try {
-                val result = consentService.write()
+                val result = consentDao.write()
                 _uiState.update { oldValue -> oldValue.copy(isConsentSubmitted = result, isLoading = false) }
 
             } catch (e: Exception) {
@@ -128,7 +124,7 @@ class FileManagementViewModel(application: Application,
      */
     fun loadFiles() {
         viewModelScope.launch(Dispatchers.IO) {
-            _uiState.update { it.copy(files = fileRepository.files.value ) }
+            _uiState.update { it.copy(files = fakeFileDao.files.value ) }
         }
     }
 }

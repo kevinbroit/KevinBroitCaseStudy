@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.casestudy.Screen
-import com.casestudy.usermanagement.ui.LoginViewModel
 import com.casestudy.usermanagement.UiEvent
 
 @Composable

@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
  */
 class FakeFileDao {
 
-    companion object {
+    private companion object {
         private const val TAG = "FakeFileDao"
     }
     /**

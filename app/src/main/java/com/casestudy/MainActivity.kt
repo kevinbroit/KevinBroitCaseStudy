@@ -43,17 +43,13 @@ fun LoadingScreen(navController: NavHostController, loginViewModel: LoginViewMod
     val isLoggedIn = loginViewModel.isLoggedIn.collectAsState()
 
     LaunchedEffect(isLoggedIn.value) {
-        when (isLoggedIn.value) {
-            false -> navController.navigate(Screen.Login.route) {
-                popUpTo("loading") { inclusive = true } // Remove LoadingScreen from back stack
-            }
-            true -> navController.navigate(Screen.FileManagement.route) {
-                popUpTo("loading") { inclusive = true } // Remove LoadingScreen from back stack
-            }
-            null -> TODO()
+        if (isLoggedIn.value == false) navController.navigate(Screen.Login.route) {
+            popUpTo("loading") { inclusive = true }
+        }
+        else navController.navigate(Screen.FileManagement.route) {
+            popUpTo("loading") { inclusive = true }
         }
     }
-
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         CircularProgressIndicator()

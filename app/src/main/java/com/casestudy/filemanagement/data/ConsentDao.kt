@@ -7,7 +7,7 @@ import kotlinx.coroutines.delay
  * Mock implementation of a consent service  for demonstration purposes.
  */
 class ConsentDao {
-    companion object {
+    private companion object {
         private const val TAG = "ConsentService"
     }
     suspend fun get(): String {
